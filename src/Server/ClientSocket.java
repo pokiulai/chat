@@ -5,9 +5,11 @@
  */
 package Server;
 
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,25 +21,34 @@ import java.util.logging.Logger;
 public class ClientSocket implements Runnable {
 
     private final Socket socket;
-    private DataInputStream input = null;
-    private DataOutputStream output = null;
+    private BufferedReader inputFromClient;
+    private DataOutputStream outputToServer;
 
     public ClientSocket(Socket socket) {
         this.socket = socket;
         try {
-            input = new DataInputStream(socket.getInputStream());
-            output = new DataOutputStream(socket.getOutputStream());
+            inputFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            outputToServer = new DataOutputStream(socket.getOutputStream());
         } catch (IOException ex) {
             Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void run(){
-        
-        System.out.println("running");
-  
-        
-    }
 
+    public void run() {
+        System.out.println("Socket is running");
+        String message;
+        while (true) {
+            try {
+                
+                message = inputFromClient.readLine();
+                if(!message.isEmpty()){
+                   outputToServer.writeChars(message);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ClientSocket.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+    }
 
 }

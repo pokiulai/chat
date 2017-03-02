@@ -36,8 +36,7 @@ public class ClientListener {
             System.out.println("Found a client");
             System.out.println("Thread socket created");
             clientSock = new ClientSocket(socket);
-            Thread t = new Thread(clientSock);
-            t.start();
+            new Thread(clientSock).start();
 
         }
 

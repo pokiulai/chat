@@ -37,7 +37,8 @@ public class Client {
 
         while (true) {
             message = scanner.nextLine();
-
+            output.writeBytes(message);
+            output.flush();
         }
     }
 
